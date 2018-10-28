@@ -12,11 +12,18 @@ class TestAddGroup(unittest.TestCase):
     def test_add_group(self):
         driver = self.driver
         self.open_home_page(driver)
-        self.login(driver)
+        self.login(driver, username="admin", password="secret")
         self.open_groups_page(driver)
-        self.init_new_group(driver)
-        self.fill_form(driver)
-        self.submit_group_creation(driver)
+        self.create_group(driver, name="dfdfsdfsf", header="sdfdfs", footer="sdfsdfsdf")
+        self.return_to_group_page(driver)
+        self.logout(driver)
+
+    def test_add_empty_group(self):
+        driver = self.driver
+        self.open_home_page(driver)
+        self.login(driver, username="admin", password="secret")
+        self.open_groups_page(driver)
+        self.create_group(driver, name="", header="", footer="")
         self.return_to_group_page(driver)
         self.logout(driver)
 
@@ -29,38 +36,34 @@ class TestAddGroup(unittest.TestCase):
         driver.find_element_by_link_text("groups").click()
 
     @staticmethod
-    def submit_group_creation(driver):
-        driver.find_element_by_name("submit").click()
-
-    @staticmethod
-    def fill_form(driver):
+    def create_group(driver, name, header, footer):
+        # Init a new group
+        driver.find_element_by_name("new").click()
+        # Fill the form
         driver.find_element_by_name("group_name").click()
-        driver.find_element_by_name("group_name").clear()
-        driver.find_element_by_name("group_name").send_keys("dfdfsdfsf")
+        driver.find_element_by_name("group_name").send_keys(name)
         driver.find_element_by_name("group_header").click()
         driver.find_element_by_name("group_header").clear()
-        driver.find_element_by_name("group_header").send_keys("sdfdfs")
+        driver.find_element_by_name("group_header").send_keys(header)
         driver.find_element_by_name("group_footer").click()
         driver.find_element_by_name("group_footer").clear()
-        driver.find_element_by_name("group_footer").send_keys("sdfsdfsdf")
-
-    @staticmethod
-    def init_new_group(driver):
-        driver.find_element_by_name("new").click()
+        driver.find_element_by_name("group_footer").send_keys(footer)
+        # Submit group creation
+        driver.find_element_by_name("submit").click()
 
     @staticmethod
     def open_groups_page(driver):
         driver.find_element_by_link_text("groups").click()
 
     @staticmethod
-    def login(driver):
+    def login(driver, username, password):
         driver.find_element_by_name("user").click()
         driver.find_element_by_name("user").clear()
-        driver.find_element_by_name("user").send_keys("admin")
+        driver.find_element_by_name("user").send_keys(username)
         driver.find_element_by_id("LoginForm").click()
         driver.find_element_by_name("pass").click()
         driver.find_element_by_name("pass").clear()
-        driver.find_element_by_name("pass").send_keys("secret")
+        driver.find_element_by_name("pass").send_keys(password)
         driver.find_element_by_xpath(
             "(.//*[normalize-space(text()) and normalize-space(.)='Password:'])[1]/following::input[2]").click()
 
