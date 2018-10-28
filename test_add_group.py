@@ -12,20 +12,14 @@ class TestAddGroup(unittest.TestCase):
     
     def test_add_group(self):
         driver = self.driver
-        self.open_home_page(driver)
         self.login(driver, username="admin", password="secret")
-        self.open_groups_page(driver)
         self.create_group(driver, Group(name="dfdfsdfsf", header="sdfdfs", footer="sdfsdfsdf"))
-        self.return_to_group_page(driver)
         self.logout(driver)
 
     def test_add_empty_group(self):
         driver = self.driver
-        self.open_home_page(driver)
         self.login(driver, username="admin", password="secret")
-        self.open_groups_page(driver)
         self.create_group(driver, Group(name="", header="", footer=""))
-        self.return_to_group_page(driver)
         self.logout(driver)
 
     @staticmethod
@@ -33,11 +27,9 @@ class TestAddGroup(unittest.TestCase):
         driver.find_element_by_link_text("Logout").click()
 
     @staticmethod
-    def return_to_group_page(driver):
-        driver.find_element_by_link_text("groups").click()
-
-    @staticmethod
     def create_group(driver, group):
+        # Open Groups page
+        driver.find_element_by_link_text("groups").click()
         # Init a new group
         driver.find_element_by_name("new").click()
         # Fill the form
@@ -51,13 +43,14 @@ class TestAddGroup(unittest.TestCase):
         driver.find_element_by_name("group_footer").send_keys(group.footer)
         # Submit group creation
         driver.find_element_by_name("submit").click()
-
-    @staticmethod
-    def open_groups_page(driver):
+        # Return to Groups page
         driver.find_element_by_link_text("groups").click()
 
     @staticmethod
     def login(driver, username, password):
+        # Open home page
+        driver.get("http://localhost/addressbook/index.php")
+        # Login
         driver.find_element_by_name("user").click()
         driver.find_element_by_name("user").clear()
         driver.find_element_by_name("user").send_keys(username)
@@ -67,10 +60,6 @@ class TestAddGroup(unittest.TestCase):
         driver.find_element_by_name("pass").send_keys(password)
         driver.find_element_by_xpath(
             "(.//*[normalize-space(text()) and normalize-space(.)='Password:'])[1]/following::input[2]").click()
-
-    @staticmethod
-    def open_home_page(driver):
-        driver.get("http://localhost/addressbook/index.php")
 
     def tearDown(self):
         self.driver.quit()
