@@ -5,9 +5,6 @@ class SessionHelper:
 
     def login(self, username, password):
         driver = self.app.driver
-        # Open home page
-        driver.get("http://localhost/addressbook/index.php")
-        # Login
         driver.find_element_by_name("user").click()
         driver.find_element_by_name("user").clear()
         driver.find_element_by_name("user").send_keys(username)
