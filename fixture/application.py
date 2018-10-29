@@ -12,7 +12,8 @@ class Application:
         self.group = GroupHelper(self)
 
     def open_home_page(self):
-        self.driver.get("http://localhost/addressbook/index.php")
+        driver = self.driver
+        driver.get("http://localhost/addressbook/index.php")
 
     def destroy(self):
         self.driver.quit()
